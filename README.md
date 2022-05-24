@@ -33,6 +33,7 @@ module.exports = {
       font-size: 14px;
     }
   `,
+  cache: true,
   useRtl: true,
   customValue(value) {
     // customValue
@@ -109,7 +110,7 @@ atomic.setConfig({
     md: '992px',
     lg: '1200px',
   },
-  cache: false,
+  cache: true,
   parentSelector: '',
   exclude: [],
   useRtl: true,
