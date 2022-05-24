@@ -2,6 +2,18 @@
 
 ### Auto generate css atomic
 
+[![npm version](https://img.shields.io/npm/v/mota-css.svg)](https://www.npmjs.com/package/mota-css)
+
+### Install
+
+`npm install mota-css`
+
+or
+
+```bash
+yarn add mota-css
+```
+
 ### Demo
 
 <https://mota-css-example.netlify.app/>
@@ -40,6 +52,24 @@ module.exports = {
   },
 };
 ```
+
+### CLI (file package.json)
+
+```json
+{
+  ...
+  "scripts": {
+    ...
+    "mota-css": "mota-css --port 4321",
+    "mota-css:watch": "yarn mota-css --watch"
+  },
+  ...
+}
+```
+
+### Compile
+
+`npm run mota-css:watch` or `yarn mota-css:watch`
 
 ### Intelligent Mota CSS tooling for VS Code
 
