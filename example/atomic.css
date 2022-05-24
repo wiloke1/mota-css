@@ -41,4 +41,7 @@
 @media (min-width:768px) { 
 .p\:20px\@sm { padding: 20px } }
 @media (min-width:992px) { 
-.p\:30px\@md { padding: 30px } }
+.p\:30px\@md { padding: 30px }
+.p\:20px\@md { padding: 20px } }
+@media (min-width:400px) { 
+.p\:20px\@400px\! { padding: 20px !important } }

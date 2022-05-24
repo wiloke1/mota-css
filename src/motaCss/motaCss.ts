@@ -61,8 +61,18 @@ export class MotaCss implements IMotaCss {
     this.classNames = removeDuplicate([...this.classNames, ...newClassNames]);
   }
 
+  private _isMediaMaxWidth(className: string) {
+    return className.replace(/\\/g, '').includes('@+');
+  }
+
   private _checkWarn(className: string, style: string) {
-    const css = `body ${style}`;
+    const breakpoint = getBreakpoint(this.config, className);
+    const newBreakpoint = this.config.breakpoints[breakpoint] || breakpoint;
+    const isMax = this._isMediaMaxWidth(className);
+    let css = `.selector ${style}`;
+    if (newBreakpoint !== 'default') {
+      css = `@media (${isMax ? 'max' : 'min'}-width:${newBreakpoint}) { .selector ${style} }`;
+    }
     if (this.valid.has(css)) {
       return false;
     }
@@ -70,7 +80,7 @@ export class MotaCss implements IMotaCss {
     const diagnostics = cssValidator(css);
     if (diagnostics.length) {
       const warn = `⚠️  ${diagnostics[0].message} in { class: '${className}', css: '${style}' }`;
-      console.warn(`\n\x1b[33m${warn}\x1b[0m`);
+      console.log(`\n\x1b[31m${warn}\x1b[0m`);
       this.classNames = this.classNames.filter(name => name !== className);
       this.warn = true;
       return true;
@@ -177,7 +187,7 @@ export class MotaCss implements IMotaCss {
     const css = Object.entries(this.styles).reduce((css, [breakpoint, style]) => {
       const newBreakpoint = this.config.breakpoints[breakpoint] || breakpoint;
       const [className] = Object.keys(style);
-      const isMax = className.replace(/\\/g, '').includes('@+');
+      const isMax = this._isMediaMaxWidth(className);
       if (newBreakpoint === 'default') {
         return `${css}\n${getCssOnce(this.config, this.cssProps, style)}`;
       }
