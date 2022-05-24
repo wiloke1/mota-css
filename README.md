@@ -78,10 +78,30 @@ module.exports = {
 
 <img src="https://raw.githubusercontent.com/wiloke1/mota-css-example/main/.github/banner.png" alt="" />
 
+### Syntax
+
+```
+<property>:<value>|<pseudo>|<pseudo>...@<media>!
+
+Eg:
+
+c:red                 -> .c\:red { color: red }
+bgc:blue!             -> .bgc\:blue\! { background-color: blue !important }
+bd:1px_solid_yellow   -> .bd\:1px_solid_yellow { border: 1px solid yellow }
+p:30px@md             -> @media (min-width:992px) { .p\:30px\@md { padding: 30px }
+m:20px@+300px         -> @media (max-width:300px) { .m\:20px\@\+300px { margin: 20px } }
+fz:20px|h             -> .fz\:20px\|h:hover { font-size: 20px }
+cnt:(After_cnt)||af   -> .cnt\:\(After_cnt\)\|\|af::after { content: 'After ctn' }
+cnt:(Before_cnt)|be   -> .cnt\:\(Before_cnt\)\|be:before { content: 'Before ctn' }
+cnt:(Hover)|h||be     -> .cnt\:\(Hover\)\|be:hover:before { content: 'Hover' }
+trf:scale(2)          -> .trf/:scale\(2\) { transform: scale(2) }
+m:calc(20px_+_10px)   -> .m\:calc\(20px_+_10px\) { margin: calc(20px + 10px) }
+```
+
 ### Html
 
 ```html
-<div class="c:red c:blue|h bgc:color-primary fz:20px w:30%@md p:30px@md m:20px@+300px pos:relative!"></div>
+<div class="c:red c:blue|h bgc:color-primary fz:20px ml:10px w:30%@md p:30px@md m:20px@+300px pos:relative!"></div>
 ```
 
 ### Generated css code
@@ -91,6 +111,8 @@ module.exports = {
 .c\:blue\|h:hover { color: blue }
 .bgc\:color-primary { background-color: var(--color-primary) }
 .fz\:20px { font-size: 20px }
+.ml\:10px { margin-left: 10px }
+[dir="rtl"] .ml\:10px { margin-right: 10px }
 .pos\:relative\! { position: relative !important }
 @media (max-width:300px) { 
 .m\:20px\@\+300px { margin: 20px } }
