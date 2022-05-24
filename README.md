@@ -6,7 +6,9 @@
 
 ### Install
 
-`npm install mota-css`
+```bash
+npm install mota-css
+```
 
 or
 
@@ -80,11 +82,13 @@ module.exports = {
 
 ### Syntax
 
-```
+```css
 <property>:<value>|<pseudo>|<pseudo>...@<media>!
 
 Eg:
 
+Class Name               CSS
+-----------------------------------------------------------------------------------------
 c:red                 -> .c\:red { color: red }
 bgc:blue!             -> .bgc\:blue\! { background-color: blue !important }
 bd:1px_solid_yellow   -> .bd\:1px_solid_yellow { border: 1px solid yellow }
