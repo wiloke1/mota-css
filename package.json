@@ -1,0 +1,79 @@
+{
+  "version": "0.10.0",
+  "license": "MIT",
+  "repository": "wiloke1/mota-css",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "bin": {
+    "mota-css": "./bin/mota-css"
+  },
+  "files": [
+    "dist",
+    "bin",
+    "cli.js"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build && rm dist/*.map && rm dist/*.esm.js",
+    "test": "tsdx test",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build && rm dist/*.map && rm dist/*.esm.js",
+    "size": "size-limit",
+    "analyze": "size-limit --why",
+    "test:cli": "node cli -w"
+  },
+  "peerDependencies": {},
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all",
+    "printWidth": 150,
+    "arrowParens": "avoid"
+  },
+  "name": "mota-css",
+  "author": "wiloke1",
+  "module": "dist/mota-css.cjs.production.min.js",
+  "size-limit": [
+    {
+      "path": "dist/mota-css.cjs.production.min.js",
+      "limit": "10 KB"
+    }
+  ],
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^7.0.8",
+    "@types/string-hash": "^1.1.1",
+    "@typescript-eslint/eslint-plugin": "^4.14.0",
+    "@typescript-eslint/parser": "^4.14.0",
+    "@typescript-eslint/typescript-estree": "^4.14.0",
+    "eslint": "^7.18.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-import-resolver-typescript": "^2.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-json": "^2.0.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "husky": "^7.0.4",
+    "size-limit": "^7.0.8",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.3.1",
+    "typescript": "^4.6.3"
+  },
+  "dependencies": {
+    "chokidar": "^3.5.3",
+    "commander": "^9.1.0",
+    "cssnano": "^5.1.7",
+    "glob": "^7.2.0",
+    "rtl-css-js": "^1.15.0",
+    "vscode-css-languageservice": "^6.0.1"
+  }
+}

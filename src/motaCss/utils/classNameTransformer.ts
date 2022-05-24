@@ -1,0 +1,26 @@
+export const classNameTransformer = (className: string) => {
+  return className
+    .replace(/\|/g, '\\|')
+    .replace(/,/g, '\\,')
+    .replace(/\(/g, '\\(')
+    .replace(/\)/g, '\\)')
+    .replace(/\?/g, '\\?')
+    .replace(/\{/g, '\\{')
+    .replace(/\}/g, '\\}')
+    .replace(/\[/g, '\\[')
+    .replace(/\]/g, '\\]')
+    .replace(/\//g, '\\/')
+    .replace(/:/g, '\\:')
+    .replace(/;/g, '\\;')
+    .replace(/@/g, '\\@')
+    .replace(/#/g, '\\#')
+    .replace(/'/g, "\\'")
+    .replace(/"/g, `\\"`)
+    .replace(/%/g, `\\%`)
+    .replace(/\+/g, `\\+`)
+    .replace(/>/g, `\\>`)
+    .replace(/!/g, `\\!`)
+    .replace(/`/g, '\\`')
+    .replace(/\.\d/g, value => '\\' + value)
+    .replace(/\^/g, '\\^');
+};

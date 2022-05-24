@@ -1,0 +1,16 @@
+{
+  "src": {
+    "tagName": "v%s",
+    "commitArgs": "-S",
+    "tagArgs": "-S"
+  },
+  "github": {
+    "release": true,
+    "assets": ["*.zip"]
+  },
+  "npm": {
+    "tag": "latest",
+    "publish": true,
+    "access": "public"
+  }
+}
