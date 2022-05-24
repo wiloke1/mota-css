@@ -83,7 +83,7 @@ module.exports = {
 ### Syntax
 
 ```css
-<property>:<value>|<pseudo>|<pseudo>...@<media>!
+<property>:<value>|<pseudo>|<pseudo><important -> "!">...@<media>
 
 Eg:
 
