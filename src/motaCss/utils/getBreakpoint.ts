@@ -1,4 +1,4 @@
-import { MEDIA_DEFAULT, MEDIA_MAX_WIDTH, MEDIA_MIN_WIDTH } from 'motaCss/constants';
+import { MEDIA_DEFAULT, MEDIA_MAX_WIDTH, MEDIA_MIN_WIDTH } from '../constants';
 import { Config } from '../types';
 
 export const getBreakpoint = (config: Config, className: string) => {

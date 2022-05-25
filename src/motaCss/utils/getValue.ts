@@ -1,4 +1,4 @@
-import { MAX_RANGE, MIN_RANGE, SPACE } from 'motaCss/constants';
+import { MAX_RANGE, MIN_RANGE, SPACE } from '../constants';
 import { Config } from '../types';
 import { cssLinearInterpolation } from './cssLinearInterpolation';
 
