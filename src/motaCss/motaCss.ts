@@ -38,7 +38,6 @@ export class MotaCss implements IMotaCss {
       parentSelector: '',
       defaultCss: '',
       useRtl: false,
-      uniqueClassNameForCssMethod: false,
       exclude: [],
       defaultClassNames: [],
     };

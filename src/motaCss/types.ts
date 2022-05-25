@@ -85,6 +85,90 @@ export interface IMotaCss {
    */
   subscribe(listener: Listener): Unsubscribe;
 }
+export interface Config {
+  /**
+   * Breakpoints for media queries
+   * @example
+   * ```ts
+   * import { atomic } from 'mota-css';
+   *
+   * atomic.setConfig({
+   *   breakpoints: {
+   *     sm: '768px',
+   *     md: '992px',
+   *     lg: '1200px',
+   *   },
+   *   ...
+   * });
+   * ```
+   */
+  breakpoints: BreakPoints;
+  /**
+   * Custom css values with object
+   * @example
+   * ```ts
+   * import { atomic } from 'mota-css';
+   *
+   * atomic.setConfig({
+   *   custom: {
+   *     'color-primary': 'var(--color-primary)',
+   *     'color-secondary': 'var(--color-secondary)'
+   *   },
+   *   ...
+   * });
+   * ```
+   */
+  custom: Custom;
+  /**
+   * Cache enabled
+   */
+  cache: boolean;
+  /**
+   * Parent selector
+   * @example
+   * ```
+   * import { atomic } from 'mota-css';
+   *
+   * atomic.setConfig({
+   *   parentSelector: '.root',
+   * });
+   *
+   * atomic.find(`<div class="c:red"></div>`);
+   * console.log(atomic.getCss());
+   * // Css result: .root .c\:red { color: red }
+   * ```
+   */
+  parentSelector: string;
+  /**
+   * Default css
+   * @example
+   * ```ts
+   * import { atomic } from 'mota-css';
+   *
+   * atomic.setConfig({
+   *   defaultCss: `
+   *     body {
+   *       font-size: 14px;
+   *     }
+   *   `,
+   *   ...
+   * });
+   * ```
+   */
+  defaultCss: string;
+  /**
+   * Use rtl
+   */
+  useRtl: boolean;
+  /**
+   * Exclude class names
+   */
+  exclude: string[];
+  /**
+   * Default class names
+   */
+  defaultClassNames: string[];
+}
 
 export type Style = Record<string, string>;
 export interface Styles {
@@ -92,17 +176,6 @@ export interface Styles {
 }
 export type BreakPoints = Record<string, string>;
 export type Custom = Record<string, string | number>;
-export interface Config {
-  breakpoints: BreakPoints;
-  custom: Custom;
-  cache: boolean;
-  parentSelector: string;
-  defaultCss: string;
-  useRtl: boolean;
-  uniqueClassNameForCssMethod: boolean;
-  exclude: string[];
-  defaultClassNames: string[];
-}
 export type Listener = (css: string) => void;
 export type Unsubscribe = () => void;
 export type CustomValue = (value: string) => string;
