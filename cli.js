@@ -84,9 +84,9 @@ if (options.watch) {
   | |\\/| | (_) || |    / _ \\    | (__\\__ \\__ \\
   |_|  |_|\\___/ |_|   /_/ \\_\\    \\___|___|___/
     `,
-      33,
+      35,
     );
-    log('\n🚀 READY TO COMPILE\n');
+    log('\n🚀 MOTA CSS IS READY\n');
   });
 } else {
   initial();
