@@ -1,14 +1,11 @@
+import { MEDIA_DEFAULT, MEDIA_MAX_WIDTH, MEDIA_MIN_WIDTH } from 'motaCss/constants';
 import { Config } from '../types';
 
-const DEFAULT = 'default';
-const MIN_WIDTH = '@';
-const MAX_WIDTH = '@+';
-
 export const getBreakpoint = (config: Config, className: string) => {
-  const hasBreakpoint = className.includes(MIN_WIDTH);
+  const hasBreakpoint = className.includes(MEDIA_MIN_WIDTH);
 
   if (hasBreakpoint) {
-    const isMax = className.includes(MAX_WIDTH);
+    const isMax = className.includes(MEDIA_MAX_WIDTH);
     let breakpoint = className.replace(/.*@\+?|!/g, '');
     const breakpointFromConfig = config.breakpoints[breakpoint];
     breakpoint = breakpointFromConfig || breakpoint;
@@ -20,5 +17,5 @@ export const getBreakpoint = (config: Config, className: string) => {
     return breakpoint;
   }
 
-  return DEFAULT;
+  return MEDIA_DEFAULT;
 };

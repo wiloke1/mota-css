@@ -1,13 +1,11 @@
+import { MAX_RANGE, MIN_RANGE, SPACE } from 'motaCss/constants';
 import { Config } from '../types';
 import { cssLinearInterpolation } from './cssLinearInterpolation';
 
 const CHAR_PATTERN = /(.*:)|((\||@|!).*)/g;
 const UNDERCORE_PATTERN = /_/g;
 const MIN_MAX_PATTERN = /-?\d+/g;
-const SPACE = ' ';
 const MIN_MAX_DEFAULT_VALUE = [0, 0];
-const MIN_RANGE = 400;
-const MAX_RANGE = 1200;
 
 export const getValue = (config: Config, className: string) => {
   const value = className

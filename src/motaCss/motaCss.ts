@@ -11,6 +11,7 @@ import { getValue } from './utils/getValue';
 import { removeDuplicate } from './utils/removeDuplicate';
 import { removeNextLineWithIgnore } from './utils/removeNextLineWithIgnore';
 import { Config, CssProps, CustomValue, IMotaCss, Listener, Pseudo, Styles, Unsubscribe } from './types';
+import { MAX_CACHE_SIZE, MEDIA_DEFAULT, MEDIA_MAX_WIDTH } from './constants';
 
 export class MotaCss implements IMotaCss {
   private classNames: string[];
@@ -24,7 +25,6 @@ export class MotaCss implements IMotaCss {
   private pseudo: Pseudo;
   private warn: boolean;
   private valid: Set<string>;
-  private readonly maxCache: number;
 
   constructor() {
     this.defaultConfig = {
@@ -48,7 +48,6 @@ export class MotaCss implements IMotaCss {
     this.listeners = [];
     this.cache = [];
     this._customValue = (value: string) => value;
-    this.maxCache = 1000000;
     this.cssProps = props;
     this.pseudo = pseudo;
     this.warn = false;
@@ -62,16 +61,16 @@ export class MotaCss implements IMotaCss {
   }
 
   private _isMediaMaxWidth(className: string) {
-    return className.replace(/\\/g, '').includes('@+');
+    return className.replace(/\\/g, '').includes(MEDIA_MAX_WIDTH);
   }
 
   private _checkWarn(className: string, style: string) {
     const breakpoint = getBreakpoint(this.config, className);
     const newBreakpoint = this.config.breakpoints[breakpoint] || breakpoint;
-    const isMax = this._isMediaMaxWidth(className);
     let css = `.selector ${style}`;
-    if (newBreakpoint !== 'default') {
-      css = `@media (${isMax ? 'max' : 'min'}-width:${newBreakpoint}) { .selector ${style} }`;
+    if (newBreakpoint !== MEDIA_DEFAULT) {
+      // No need to check if it's max-width
+      css = `@media (min-width:${newBreakpoint}) { .selector ${style} }`;
     }
     if (this.valid.has(css)) {
       return false;
@@ -142,8 +141,8 @@ export class MotaCss implements IMotaCss {
   private _setCache(value: string) {
     this.cache.push(value);
     const len = this.cache.length;
-    if (len > this.maxCache) {
-      this.cache = this.cache.slice(len - this.maxCache, len);
+    if (len > MAX_CACHE_SIZE) {
+      this.cache = this.cache.slice(len - MAX_CACHE_SIZE, len);
     }
   }
 
@@ -188,7 +187,7 @@ export class MotaCss implements IMotaCss {
       const newBreakpoint = this.config.breakpoints[breakpoint] || breakpoint;
       const [className] = Object.keys(style);
       const isMax = this._isMediaMaxWidth(className);
-      if (newBreakpoint === 'default') {
+      if (newBreakpoint === MEDIA_DEFAULT) {
         return `${css}\n${getCssOnce(this.config, this.cssProps, style)}`;
       }
       return `${css}\n@media (${isMax ? 'max' : 'min'}-width:${newBreakpoint}) { ${getCssOnce(this.config, this.cssProps, style)} }`;

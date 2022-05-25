@@ -2,7 +2,7 @@ export const cssLinearInterpolation = (value: Record<number, number>) => {
   const keys = Object.keys(value);
   const values = Object.values(value);
   if (keys.length !== 2) {
-    throw new Error('linearInterpolation() value must be exactly 2 values');
+    throw new Error('cssLinearInterpolation() value must be exactly 2 values');
   }
   // The slope
   const m = (values[1] - values[0]) / (Number(keys[1]) - Number(keys[0]));
