@@ -30,20 +30,20 @@ if (customValue) {
   atomic.customValue(customValue);
 }
 
-atomic.subscribe(css => {
+atomic.on('success', css => {
   fs.writeFileSync(path.resolve(process.cwd(), configOutput), css);
   started = true;
 });
 
-atomic.on('success', data => {
+atomic.on('valid', diagnostic => {
   if (started) {
-    const { message, className, css } = data;
+    const { message, className, css } = diagnostic;
     log(`✅ ${message} ( class: "${className}" -> css: "${css}" )`, 32);
   }
 });
 
-atomic.on('failure', data => {
-  const { message, className, css } = data;
+atomic.on('invalid', diagnostic => {
+  const { message, className, css } = diagnostic;
   log(`⚠️  ${message} ( class: "${className}" -> css: "${css}" )`, 31);
 });
 

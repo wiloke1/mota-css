@@ -1,4 +1,4 @@
-import { OnData } from '../types';
+import { Diagnostic } from '../types';
 
 export type Id = number;
 interface Observer<ListenerT> {
@@ -61,6 +61,7 @@ class EventEmitter<EventsT extends Events> implements IEventEmitter<EventsT> {
 }
 
 export const event = new EventEmitter<{
-  success: Observers<(data: OnData) => void>;
-  failure: Observers<(data: OnData) => void>;
+  success: Observers<(css: string) => void>;
+  valid: Observers<(diagnostic: Diagnostic) => void>;
+  invalid: Observers<(diagnostic: Diagnostic) => void>;
 }>();

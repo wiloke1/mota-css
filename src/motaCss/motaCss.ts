@@ -10,7 +10,7 @@ import { getStyle } from './utils/getStyle';
 import { getValue } from './utils/getValue';
 import { removeDuplicate } from './utils/removeDuplicate';
 import { removeNextLineWithIgnore } from './utils/removeNextLineWithIgnore';
-import { Config, CssProps, CustomValue, Event, IMotaCss, Listener, Pseudo, Styles, Unsubscribe } from './types';
+import { Config, CssProps, CustomValue, Event, IMotaCss, Pseudo, Styles } from './types';
 import { COMPILED_SUCCESS, MAX_CACHE_SIZE, MEDIA_DEFAULT, MEDIA_MAX_WIDTH } from './constants';
 import { event, Id } from './utils/event';
 
@@ -19,7 +19,6 @@ export class MotaCss implements IMotaCss {
   private styles: Styles;
   private defaultConfig: Config;
   private config: Config;
-  private listeners: Listener[];
   private cache: string[];
   private _customValue: CustomValue;
   private cssProps: CssProps;
@@ -44,7 +43,6 @@ export class MotaCss implements IMotaCss {
     this.classNames = [];
     this.styles = {};
     this.config = this.defaultConfig;
-    this.listeners = [];
     this.cache = [];
     this._customValue = (value: string) => value;
     this.cssProps = props;
@@ -52,7 +50,7 @@ export class MotaCss implements IMotaCss {
     this.valid = new Set();
   }
 
-  public on<K extends keyof Event>(eventType: K, listener: Event[K]): Id {
+  public on<K extends keyof Event = keyof Event>(eventType: K, listener: Event[K]): Id {
     return event.on(eventType, listener);
   }
 
@@ -86,7 +84,7 @@ export class MotaCss implements IMotaCss {
 
     const diagnostics = cssValidator(css);
     if (diagnostics.length) {
-      event.emit('failure', {
+      event.emit('invalid', {
         message: diagnostics[0].message,
         className,
         css,
@@ -94,7 +92,7 @@ export class MotaCss implements IMotaCss {
       this.classNames = this.classNames.filter(name => name !== className);
       return true;
     }
-    event.emit('success', {
+    event.emit('valid', {
       message: COMPILED_SUCCESS,
       className,
       css,
@@ -162,9 +160,7 @@ export class MotaCss implements IMotaCss {
       this._setClassNames(value);
       this._setStyles();
     }
-    this.listeners.forEach(listener => {
-      listener(this.getCss());
-    });
+    event.emit('success', this.getCss());
     return this;
   }
 
@@ -181,9 +177,7 @@ export class MotaCss implements IMotaCss {
       ...this.classNames,
       ...classNames,
     };
-    this.listeners.forEach(listener => {
-      listener(this.getCss());
-    });
+    event.emit('success', this.getCss());
     return this;
   }
 
@@ -218,14 +212,6 @@ export class MotaCss implements IMotaCss {
       ...this.pseudo,
       ...pseudo,
     };
-  }
-
-  public subscribe(listener: Listener): Unsubscribe {
-    this.listeners.push(listener);
-    const unsubscribe = () => {
-      this.listeners = this.listeners.filter(listen => listen !== listener);
-    };
-    return unsubscribe;
   }
 }
 

@@ -79,12 +79,16 @@ export interface IMotaCss {
    * ```ts
    * import { atomic } from 'mota-css';
    *
-   * atomic.on('success', data => {
-   *   console.log(data);
+   * atomic.on('success', css => {
+   *   console.log(css);
    * });
    *
-   * atomic.on('failure', data => {
-   *   console.log(data);
+   * atomic.on('valid', diagnostic => {
+   *   console.log(diagnostic);
+   * });
+   *
+   * atomic.on('invalid', diagnostic => {
+   *   console.log(diagnostic);
    * });
    * ```
    */
@@ -93,18 +97,6 @@ export interface IMotaCss {
    * Off event success and failure
    */
   off(id: Id): void;
-  /**
-   * Subscribe to the css
-   * ```ts
-   * import { atomic } from 'mota-css';
-   *
-   * const unsubscribe = atomic.subscribe((css) => {
-   *   console.log(css);
-   *   // or console.log(atomic.getCss());
-   * });
-   * ```
-   */
-  subscribe(listener: Listener): Unsubscribe;
 }
 export interface Config {
   /**
@@ -197,14 +189,15 @@ export interface Styles {
 }
 export type BreakPoints = Record<string, string>;
 export type Custom = Record<string, string | number>;
-export interface OnData {
+export interface Diagnostic {
   message: string;
   className: string;
   css: string;
 }
 export interface Event {
-  success: (data: OnData) => void;
-  failure: (data: OnData) => void;
+  success: (css: string) => void;
+  valid: (diagnostic: Diagnostic) => void;
+  invalid: (diagnostic: Diagnostic) => void;
 }
 export type Listener = (css: string) => void;
 export type ErrorListener = (error: Error | null) => void;
