@@ -1,3 +1,5 @@
+import { Id } from './utils/event';
+
 export interface IMotaCss {
   /**
    * Find the class names in the string
@@ -72,6 +74,25 @@ export interface IMotaCss {
    * ```
    */
   addPseudoSyntax(pseudo: Pseudo): void;
+  /**
+   * On success and failure
+   * ```ts
+   * import { atomic } from 'mota-css';
+   *
+   * atomic.on('success', data => {
+   *   console.log(data);
+   * });
+   *
+   * atomic.on('failure', data => {
+   *   console.log(data);
+   * });
+   * ```
+   */
+  on<K extends keyof Event = keyof Event>(eventType: K, listener: Event[K]): Id;
+  /**
+   * Off event success and failure
+   */
+  off(id: Id): void;
   /**
    * Subscribe to the css
    * ```ts
@@ -176,7 +197,17 @@ export interface Styles {
 }
 export type BreakPoints = Record<string, string>;
 export type Custom = Record<string, string | number>;
+export interface OnData {
+  message: string;
+  className: string;
+  css: string;
+}
+export interface Event {
+  success: (data: OnData) => void;
+  failure: (data: OnData) => void;
+}
 export type Listener = (css: string) => void;
+export type ErrorListener = (error: Error | null) => void;
 export type Unsubscribe = () => void;
 export type CustomValue = (value: string) => string;
 export type CssProps = Record<string, string>;

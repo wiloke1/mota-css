@@ -9,6 +9,7 @@ const { input: configInput, output: configOutput, customValue, ...config } = req
 
 const server = http.createServer();
 const input = configInput || './src';
+let started = false;
 
 function log(str, color = 36) {
   return console.log(`\x1b[${color}m${str}\x1b[0m`);
@@ -31,6 +32,19 @@ if (customValue) {
 
 atomic.subscribe(css => {
   fs.writeFileSync(path.resolve(process.cwd(), configOutput), css);
+  started = true;
+});
+
+atomic.on('success', data => {
+  if (started) {
+    const { message, className, css } = data;
+    log(`✅ ${message} ( class: "${className}" -> css: "${css}" )`, 32);
+  }
+});
+
+atomic.on('failure', data => {
+  const { message, className, css } = data;
+  log(`⚠️  ${message} ( class: "${className}" -> css: "${css}" )`, 31);
 });
 
 function atomicFind(file) {

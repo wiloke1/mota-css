@@ -10,8 +10,9 @@ import { getStyle } from './utils/getStyle';
 import { getValue } from './utils/getValue';
 import { removeDuplicate } from './utils/removeDuplicate';
 import { removeNextLineWithIgnore } from './utils/removeNextLineWithIgnore';
-import { Config, CssProps, CustomValue, IMotaCss, Listener, Pseudo, Styles, Unsubscribe } from './types';
-import { MAX_CACHE_SIZE, MEDIA_DEFAULT, MEDIA_MAX_WIDTH } from './constants';
+import { Config, CssProps, CustomValue, Event, IMotaCss, Listener, Pseudo, Styles, Unsubscribe } from './types';
+import { COMPILED_SUCCESS, MAX_CACHE_SIZE, MEDIA_DEFAULT, MEDIA_MAX_WIDTH } from './constants';
+import { event, Id } from './utils/event';
 
 export class MotaCss implements IMotaCss {
   private classNames: string[];
@@ -23,7 +24,6 @@ export class MotaCss implements IMotaCss {
   private _customValue: CustomValue;
   private cssProps: CssProps;
   private pseudo: Pseudo;
-  private warn: boolean;
   private valid: Set<string>;
 
   constructor() {
@@ -34,7 +34,7 @@ export class MotaCss implements IMotaCss {
         lg: '1200px',
       },
       custom: {},
-      cache: false,
+      cache: true,
       parentSelector: '',
       defaultCss: '',
       useRtl: false,
@@ -49,8 +49,15 @@ export class MotaCss implements IMotaCss {
     this._customValue = (value: string) => value;
     this.cssProps = props;
     this.pseudo = pseudo;
-    this.warn = false;
     this.valid = new Set();
+  }
+
+  public on<K extends keyof Event>(eventType: K, listener: Event[K]): Id {
+    return event.on(eventType, listener);
+  }
+
+  public off(id: Id): void {
+    event.off(id);
   }
 
   private _setClassNames(value: string) {
@@ -63,40 +70,41 @@ export class MotaCss implements IMotaCss {
     return className.replace(/\\/g, '').includes(MEDIA_MAX_WIDTH);
   }
 
-  private _checkWarn(className: string, style: string) {
+  private _checkValidate(className: string, style: string) {
     const breakpoint = getBreakpoint(this.config, className);
     const newBreakpoint = this.config.breakpoints[breakpoint] || breakpoint;
-    let css = `.selector ${style}`;
+    const isMax = this._isMediaMaxWidth(className);
+    const className_ = classNameTransformer(className);
+    let css = `.${className_} ${style}`;
     if (newBreakpoint !== MEDIA_DEFAULT) {
-      // No need to check if it's max-width
-      css = `@media (min-width:${newBreakpoint}) { .selector ${style} }`;
+      css = `@media (${isMax ? 'max' : 'min'}-width:${newBreakpoint}) { .${className_} ${style} }`;
     }
+
     if (this.valid.has(css)) {
       return false;
     }
 
     const diagnostics = cssValidator(css);
     if (diagnostics.length) {
-      const warn = `⚠️  ${diagnostics[0].message} in { class: '${className}', css: '${style}' }`;
-      console.log(`\n\x1b[31m${warn}\x1b[0m`);
+      event.emit('failure', {
+        message: diagnostics[0].message,
+        className,
+        css,
+      });
       this.classNames = this.classNames.filter(name => name !== className);
-      this.warn = true;
       return true;
     }
+    event.emit('success', {
+      message: COMPILED_SUCCESS,
+      className,
+      css,
+    });
     this.valid.add(css);
     return false;
   }
 
-  private _success(index: number) {
-    if (this.warn && index === this.classNames.length - 1) {
-      const success = `✅ Compiled successfully`;
-      console.log(`\n\x1b[32m${success}\x1b[0m`);
-      this.warn = false;
-    }
-  }
-
   private _setStyles() {
-    this.styles = this.classNames.reduce<Styles>((styles, className, index) => {
+    this.styles = this.classNames.reduce<Styles>((styles, className) => {
       const propShorthand = className.replace(/:.*/g, '');
       const prop = props[propShorthand] || propShorthand;
       const className_ = classNameTransformer(className);
@@ -110,11 +118,9 @@ export class MotaCss implements IMotaCss {
       const style = getStyle(prop, value, important);
       const breakpoint = getBreakpoint(this.config, className);
 
-      if (this._checkWarn(className, style)) {
+      if (this._checkValidate(className, style)) {
         return styles;
       }
-
-      this._success(index);
 
       if (!!className.includes('|')) {
         const pseudo = getPseudo(className);
