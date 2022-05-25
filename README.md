@@ -155,6 +155,14 @@ atomic
   .find(`<div class="c:red c:blue|h fz:20px w:30%@md p:30px@md m:20px@+300px pos:relative!"></div>`);
   .find(`const className = "bgc:blue";`);
 
+atomic.on('success', diagnostic => {
+  console.log(diagnostic);
+});
+
+atomic.on('failure', diagnostic => {
+  console.log(diagnostic);
+});
+
 const unsubscribe = atomic.subscribe(() => {
   console.log(atomic.getCss());
 });
