@@ -8,7 +8,7 @@ export const selectorTransformer = (selector: string) => {
     .replace(/\{/g, '\\{')
     .replace(/\}/g, '\\}')
     .replace(/\//g, '\\/')
-    .replace(/:/g, '\\:')
+    .replace(/\.\w*:/g, value => value.replace(/:/g, '\\:'))
     .replace(/;/g, '\\;')
     .replace(/@/g, '\\@')
     .replace(/#/g, '\\#')

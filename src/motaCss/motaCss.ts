@@ -185,7 +185,7 @@ export class MotaCss implements IMotaCss {
     return this;
   }
 
-  public setConfig(cfg: Partial<Config>) {
+  public setConfig(cfg: Partial<Config> = {}) {
     this.config = {
       ...this.defaultConfig,
       ...cfg,

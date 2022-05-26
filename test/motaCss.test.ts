@@ -1,4 +1,5 @@
 import { MotaCss } from '../src/motaCss/motaCss';
+import { pfs } from '../src/motaCss/plugins/pfs'
 
 const shortTests = [
   {
@@ -74,9 +75,8 @@ describe('Atomic', () => {
   shortTests.forEach(({input, output}) => {
     it(input, () => {
       const atomic = new MotaCss();
-      atomic.setConfig({
-        useRtl: true
-      })
+      atomic.setConfig();
+      atomic.plugins([pfs()])
       atomic.find(input);
       const actual = atomic.getCss().replace(/\n/g, '').trim();
       expect(actual).toBe(output.replace(/\n\s*\./g, '.').trim());
