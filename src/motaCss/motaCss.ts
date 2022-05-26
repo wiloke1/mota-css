@@ -1,4 +1,4 @@
-import { COMPILED_SUCCESS, MAX_CACHE_SIZE, MEDIA_DEFAULT, MEDIA_MAX_WIDTH } from './constants';
+import { COMPILED_SUCCESS, DOT, MAX_CACHE_SIZE, MEDIA_DEFAULT, MEDIA_MAX_WIDTH } from './constants';
 import { Config, CssProps, CustomValue, Event, IMotaCss, Plugin, Pseudo, Styles } from './types';
 import { selectorTransformer } from './utils/selectorTransformer';
 import { cssValidator } from './utils/cssValidator';
@@ -143,7 +143,7 @@ export class MotaCss implements IMotaCss {
         return styles;
       }
 
-      const selector = `${parentSelector}.${!!className.includes('|') ? `${className}${getPseudo(className)}` : className}`;
+      const selector = `${parentSelector}${DOT}${!!className.includes('|') ? `${className}${getPseudo(className)}` : className}`;
       const style = getStyle(property, value);
 
       if (this._checkValidate(className, selector, style)) {
