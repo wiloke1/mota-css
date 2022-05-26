@@ -11,8 +11,8 @@ const server = http.createServer();
 const input = configInput || './src';
 let started = false;
 
-function log(str, color = 36) {
-  return console.log(`\x1b[${color}m${str}\x1b[0m`);
+function log(arr) {
+  return console.log(...arr.map(([text, color]) => `\x1b[${color}m${text}\x1b[0m`));
 }
 
 program.version(require('./package.json').version);
@@ -32,19 +32,28 @@ if (customValue) {
 
 atomic.on('success', css => {
   fs.writeFileSync(path.resolve(process.cwd(), configOutput), css);
-  started = true;
+  const timeoutId = setTimeout(() => {
+    started = true;
+    clearTimeout(timeoutId);
+  }, 1000);
 });
 
 atomic.on('valid', diagnostic => {
   if (started) {
     const { message, className, css } = diagnostic;
-    log(`✅ ${message} ( class: "${className}" -> css: "${css}" )`, 32);
+    log([
+      [`[${message}]`, 32],
+      [`(class: "${className}" -> css: "${css}")`, 35],
+    ]);
   }
 });
 
 atomic.on('invalid', diagnostic => {
   const { message, className, css } = diagnostic;
-  log(`⚠️  ${message} ( class: "${className}" -> css: "${css}" )`, 31);
+  log([
+    [`[${message}]`, 31],
+    [`(class: "${className}" -> css: "${css}")`, 35],
+  ]);
 });
 
 atomic.plugins(plugins);
@@ -89,8 +98,9 @@ if (options.watch) {
   server.listen(PORT, () => {
     initial();
     watchFiles();
-    log(
-      `
+    log([
+      [
+        `
       *       )                        (   (
     (  \`   ( /(  *   )   (         (   )\\ ))\\ )
     )\\))(  )\\()\` )  /(   )\\        )\\ (()/(()/(
@@ -100,9 +110,10 @@ if (options.watch) {
   | |\\/| | (_) || |    / _ \\    | (__\\__ \\__ \\
   |_|  |_|\\___/ |_|   /_/ \\_\\    \\___|___|___/
     `,
-      35,
-    );
-    log('\n🚀 MOTA CSS IS READY\n');
+        36,
+      ],
+    ]);
+    log([['\n🚀 MOTA CSS IS READY\n', 36]]);
   });
 } else {
   initial();

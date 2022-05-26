@@ -6,13 +6,14 @@
 .bgc\:rgba\(0\,0\,0\,0\.04\) { background-color: rgba(0,0,0,0.04) }
 .bgc\:red { background-color: red }
 .bgc\:\#6257de { background-color: #6257de }
-.bgc\:\#3c2fc9\|h\:hover { background-color: #3c2fc9 }
+.bgc\:\#3c2fc9\|h:hover { background-color: #3c2fc9 }
 .bxsh\:none { box-shadow: none }
 .c\:\#000 { color: #000 }
 .c\:\#fff { color: #fff }
-.c\:\#fff\|hover\:hover { color: #fff }
+.c\:\#fff\|hover:hover { color: #fff }
 .c\:abc { color: pink }
-.cnt\:\(test_content\)\|after\:after { content: 'test content' }
+.c\:yellow { color: yellow }
+.cnt\:\(test_content\)\|after:after { content: 'test content' }
 .d\:inline-flex { display: inline-flex }
 .fw\:600\! { font-weight: 600 !important }
 .fw\:600 { font-weight: 600 }
@@ -39,7 +40,6 @@
 .trf\:translate\(calc\(10px_-_20px\)\,10px\)\! { transform: translate(calc(10px - 20px),10px) !important }
 [dir=\"rtl\"] .trf\:translate\(calc\(10px_-_20px\)\,10px\)\! { transform: translate(calc(-1 * (10px - 20px)),10px) !important }
 .trs\:0\.3s { transition: 0.3s }
-.c\:yellow { color: yellow }
 @media (min-width:768px) { 
 .p\:20px\@sm { padding: 20px } }
 @media (min-width:992px) { 
