@@ -38,7 +38,7 @@ module.exports = {
     }
   `,
   cache: true,
-  plugins: [rtl(), pfs(), testplugin1(), testplugin2()],
+  plugins: [pixelToRem(62.5), rtl(), pfs(), testplugin2()],
   customValue(value) {
     // customValue
     console.log(value);
@@ -57,18 +57,22 @@ module.exports = {
   },
 };
 
-function testplugin1() {
-  return ({ config, cssProps, pseudo, styles, addStyles, addBase }) => {
+function pixelToRem(rootFontSize) {
+  return ({ styles, addStyles }) => {
     addStyles(
       Object.entries(styles).reduce((obj, [breakpoint, style]) => {
         return {
           ...obj,
           [breakpoint]: Object.entries(style).reduce((obj, [selector, css]) => {
             const [property, value] = css;
-            if (value === 'test') {
+            if (/[\d.]*px/g.test(value)) {
+              const newValue = value.replace(/[\d.]*px/g, (val) => {
+                const num = val.replace("px", "");
+                return `${(num * 62.5) / rootFontSize / 10}rem`;
+              });
               return {
                 ...obj,
-                [selector]: [property, 'pink'],
+                [selector]: [property, newValue],
               };
             }
             return {
@@ -77,11 +81,11 @@ function testplugin1() {
             };
           }, {}),
         };
-      }, {}),
+      }, {})
     );
   };
 }
-// use testplugin1: class c:test -> c:pink
+// use pixelToRem: fz:14px -> css { font-size: ...rem }
 
 function testplugin2() {
   return ({ addBase }) => {
