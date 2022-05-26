@@ -8,7 +8,7 @@ import { getBreakpoint } from './utils/getBreakpoint';
 import { getClassNames } from './utils/getClassNames';
 import { getImportant } from './utils/getImportant';
 import { getPseudo } from './utils/getPseudo';
-import { getStyle } from './utils/getStyle';
+import { getStyle, handleValueHasContent } from './utils/getStyle';
 import { getValue } from './utils/getValue';
 import { removeDuplicate } from './utils/removeDuplicate';
 import { removeNextLineWithIgnore } from './utils/removeNextLineWithIgnore';
@@ -154,7 +154,7 @@ export class MotaCss implements IMotaCss {
         ...styles,
         [breakpoint]: {
           ...styles[breakpoint],
-          [selector]: [property, /content:\s+\(.*\)/g.test(value) ? value.replace(/\(|\)/g, `'`) : value],
+          [selector]: [property, handleValueHasContent(value)],
         },
       };
     }, {} as Styles);
