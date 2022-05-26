@@ -1,5 +1,5 @@
-export const classNameTransformer = (className: string) => {
-  return className
+export const selectorTransformer = (selector: string) => {
+  return selector
     .replace(/\|/g, '\\|')
     .replace(/,/g, '\\,')
     .replace(/\(/g, '\\(')
@@ -7,8 +7,6 @@ export const classNameTransformer = (className: string) => {
     .replace(/\?/g, '\\?')
     .replace(/\{/g, '\\{')
     .replace(/\}/g, '\\}')
-    .replace(/\[/g, '\\[')
-    .replace(/\]/g, '\\]')
     .replace(/\//g, '\\/')
     .replace(/:/g, '\\:')
     .replace(/;/g, '\\;')

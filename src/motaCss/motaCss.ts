@@ -1,18 +1,18 @@
+import { COMPILED_SUCCESS, MAX_CACHE_SIZE, MEDIA_DEFAULT, MEDIA_MAX_WIDTH } from './constants';
+import { Config, CssProps, CustomValue, Event, IMotaCss, Plugin, Pseudo, Styles } from './types';
+import { selectorTransformer } from './utils/selectorTransformer';
 import { cssValidator } from './utils/cssValidator';
 import { props, pseudo } from './utils/data';
+import { event, Id } from './utils/event';
 import { getBreakpoint } from './utils/getBreakpoint';
-import { classNameTransformer } from './utils/classNameTransformer';
 import { getClassNames } from './utils/getClassNames';
-import { getCssOnce } from './utils/getCssOnce';
 import { getImportant } from './utils/getImportant';
 import { getPseudo } from './utils/getPseudo';
 import { getStyle } from './utils/getStyle';
 import { getValue } from './utils/getValue';
 import { removeDuplicate } from './utils/removeDuplicate';
 import { removeNextLineWithIgnore } from './utils/removeNextLineWithIgnore';
-import { Config, CssProps, CustomValue, Event, IMotaCss, Pseudo, Styles } from './types';
-import { COMPILED_SUCCESS, MAX_CACHE_SIZE, MEDIA_DEFAULT, MEDIA_MAX_WIDTH } from './constants';
-import { event, Id } from './utils/event';
+import { styleToCssString } from './utils/styleToCssString';
 
 export class MotaCss implements IMotaCss {
   private classNames: string[];
@@ -36,7 +36,6 @@ export class MotaCss implements IMotaCss {
       cache: true,
       parentSelector: '',
       defaultCss: '',
-      useRtl: false,
       exclude: [],
       defaultClassNames: [],
     };
@@ -48,6 +47,36 @@ export class MotaCss implements IMotaCss {
     this.cssProps = props;
     this.pseudo = pseudo;
     this.valid = new Set();
+  }
+
+  private handlePluginAddStyles(styles: Styles) {
+    this.styles = {
+      ...this.styles,
+      ...styles,
+    };
+  }
+
+  private handlePluginAddBase(css: string) {
+    if (!this.config.defaultCss.includes(css)) {
+      this.config.defaultCss = `${this.config.defaultCss}${css}`;
+    }
+  }
+
+  public plugins(plugins: Plugin[]): void {
+    event.on('plugin', () => {
+      if (plugins.length) {
+        plugins.forEach(plugin => {
+          plugin({
+            config: this.config,
+            cssProps: this.cssProps,
+            pseudo: this.pseudo,
+            styles: this.styles,
+            addStyles: this.handlePluginAddStyles.bind(this),
+            addBase: this.handlePluginAddBase.bind(this),
+          });
+        });
+      }
+    });
   }
 
   public on<K extends keyof Event = keyof Event>(eventType: K, listener: Event[K]): Id {
@@ -64,18 +93,18 @@ export class MotaCss implements IMotaCss {
     this.classNames = removeDuplicate([...this.classNames, ...newClassNames]);
   }
 
-  private _isMediaMaxWidth(className: string) {
-    return className.replace(/\\/g, '').includes(MEDIA_MAX_WIDTH);
+  private _isMediaMaxWidth(selector: string) {
+    return selector.replace(/\\/g, '').includes(MEDIA_MAX_WIDTH);
   }
 
-  private _checkValidate(className: string, style: string) {
-    const breakpoint = getBreakpoint(this.config, className);
+  private _checkValidate(className: string, selector: string, style: string) {
+    const breakpoint = getBreakpoint(this.config, selector);
     const newBreakpoint = this.config.breakpoints[breakpoint] || breakpoint;
-    const isMax = this._isMediaMaxWidth(className);
-    const className_ = classNameTransformer(className);
-    let css = `.${className_} ${style}`;
+    const isMax = this._isMediaMaxWidth(selector);
+    const selector_ = selectorTransformer(selector);
+    let css = `${selector_} ${style}`;
     if (newBreakpoint !== MEDIA_DEFAULT) {
-      css = `@media (${isMax ? 'max' : 'min'}-width:${newBreakpoint}) { .${className_} ${style} }`;
+      css = `@media (${isMax ? 'max' : 'min'}-width:${newBreakpoint}) { ${selector_} ${style} }`;
     }
 
     if (this.valid.has(css)) {
@@ -104,41 +133,33 @@ export class MotaCss implements IMotaCss {
   private _setStyles() {
     this.styles = this.classNames.reduce<Styles>((styles, className) => {
       const propShorthand = className.replace(/:.*/g, '');
-      const prop = props[propShorthand] || propShorthand;
-      const className_ = classNameTransformer(className);
-      const value = this._customValue(getValue(this.config, className));
-
-      if (!prop || !className.includes(':') || !value) {
-        return styles;
-      }
-
-      const important = getImportant(className);
-      const style = getStyle(prop, value, important);
+      const property = this.cssProps[propShorthand];
       const breakpoint = getBreakpoint(this.config, className);
+      const important = getImportant(className);
+      const value = `${this._customValue(getValue(this.config, className))}${important}`;
+      const parentSelector = !!this.config.parentSelector ? `${this.config.parentSelector} ` : '';
 
-      if (this._checkValidate(className, style)) {
+      if (!property || !className.includes(':') || !value) {
         return styles;
       }
 
-      if (!!className.includes('|')) {
-        const pseudo = getPseudo(className);
-        return {
-          ...styles,
-          [breakpoint]: {
-            ...styles[breakpoint],
-            [`${className_}${pseudo}`]: style,
-          },
-        };
+      const selector = `${parentSelector}.${!!className.includes('|') ? `${className}${getPseudo(className)}` : className}`;
+      const style = getStyle(property, value);
+
+      if (this._checkValidate(className, selector, style)) {
+        return styles;
       }
 
       return {
         ...styles,
         [breakpoint]: {
           ...styles[breakpoint],
-          [className_]: style,
+          [selector]: [property, /content:\s+\(.*\)/g.test(value) ? value.replace(/\(|\)/g, `'`) : value],
         },
       };
     }, {} as Styles);
+
+    event.emit('plugin', undefined);
   }
 
   private _setCache(value: string) {
@@ -186,10 +207,11 @@ export class MotaCss implements IMotaCss {
       const newBreakpoint = this.config.breakpoints[breakpoint] || breakpoint;
       const [className] = Object.keys(style);
       const isMax = this._isMediaMaxWidth(className);
+      const cssString = styleToCssString(style);
       if (newBreakpoint === MEDIA_DEFAULT) {
-        return `${css}\n${getCssOnce(this.config, this.cssProps, style)}`;
+        return `${css}\n${cssString}`;
       }
-      return `${css}\n@media (${isMax ? 'max' : 'min'}-width:${newBreakpoint}) { ${getCssOnce(this.config, this.cssProps, style)} }`;
+      return `${css}\n@media (${isMax ? 'max' : 'min'}-width:${newBreakpoint}) { ${cssString} }`;
     }, '');
     const allCss = `${this.config.defaultCss}\n${css}`.replace(/\n+/g, '\n');
 

@@ -27,6 +27,8 @@ yarn add mota-css
 ### mota-css.config.js
 
 ```js
+const { pfs, rtl } = require('mota-css');
+
 module.exports = {
   input: ["./src/**/*.jsx", "./src/**/*.js"],
   output: "./src/mota-css.css",
@@ -36,7 +38,7 @@ module.exports = {
     }
   `,
   cache: true,
-  useRtl: true,
+  plugins: [rtl(), pfs(), testplugin1(), testplugin2()],
   customValue(value) {
     // customValue
     console.log(value);
@@ -54,6 +56,38 @@ module.exports = {
     "color-quaternary": "var(--color-quaternary)",
   },
 };
+
+function testplugin1() {
+  return ({ config, cssProps, pseudo, styles, addStyles, addBase }) => {
+    addStyles(
+      Object.entries(styles).reduce((obj, [breakpoint, style]) => {
+        return {
+          ...obj,
+          [breakpoint]: Object.entries(style).reduce((obj, [selector, css]) => {
+            const [property, value] = css;
+            if (value === 'test') {
+              return {
+                ...obj,
+                [selector]: [property, 'pink'],
+              };
+            }
+            return {
+              ...obj,
+              [selector]: css,
+            };
+          }, {}),
+        };
+      }, {}),
+    );
+  };
+}
+// use testplugin1: class c:test -> c:pink
+
+function testplugin2() {
+  return ({ addBase }) => {
+    addBase(`.testttttttttt { color: red }`);
+  };
+}
 ```
 
 ### CLI (file package.json)
@@ -146,6 +180,8 @@ atomic.setConfig({
   },
 });
 
+atomic.plugins([rtl(), pfs()]);
+
 atomic.customValue(value => {
   console.log(value);
   return value;
@@ -155,15 +191,18 @@ atomic
   .find(`<div class="c:red c:blue|h fz:20px w:30%@md p:30px@md m:20px@+300px pos:relative!"></div>`);
   .find(`const className = "bgc:blue";`);
 
-atomic.on('success', diagnostic => {
-  console.log(diagnostic);
-});
-
-atomic.on('failure', diagnostic => {
-  console.log(diagnostic);
-});
-
-const unsubscribe = atomic.subscribe(() => {
+const id = atomic.on('success', css => {
   console.log(atomic.getCss());
 });
+
+// atomic.off(id);
+
+atomic.on('valid', diagnostic => {
+  console.log(diagnostic);
+});
+
+atomic.on('invalid', diagnostic => {
+  console.log(diagnostic);
+});
+
 ```

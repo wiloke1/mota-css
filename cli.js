@@ -5,7 +5,7 @@ const chokidar = require('chokidar');
 const { program } = require('commander');
 const glob = require('glob');
 const { atomic } = require('./dist/index');
-const { input: configInput, output: configOutput, customValue, ...config } = require(path.resolve(process.cwd(), 'mota-css.config.js'));
+const { input: configInput, output: configOutput, customValue, plugins, ...config } = require(path.resolve(process.cwd(), 'mota-css.config.js'));
 
 const server = http.createServer();
 const input = configInput || './src';
@@ -46,6 +46,8 @@ atomic.on('invalid', diagnostic => {
   const { message, className, css } = diagnostic;
   log(`⚠️  ${message} ( class: "${className}" -> css: "${css}" )`, 31);
 });
+
+atomic.plugins(plugins);
 
 function atomicFind(file) {
   fs.readFile(path.resolve(process.cwd(), file), 'utf8', (err, data) => {

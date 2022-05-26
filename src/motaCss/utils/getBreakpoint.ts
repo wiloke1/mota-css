@@ -1,12 +1,12 @@
 import { MEDIA_DEFAULT, MEDIA_MAX_WIDTH, MEDIA_MIN_WIDTH } from '../constants';
 import { Config } from '../types';
 
-export const getBreakpoint = (config: Config, className: string) => {
-  const hasBreakpoint = className.includes(MEDIA_MIN_WIDTH);
+export const getBreakpoint = (config: Config, selector: string) => {
+  const hasBreakpoint = selector.includes(MEDIA_MIN_WIDTH);
 
   if (hasBreakpoint) {
-    const isMax = className.includes(MEDIA_MAX_WIDTH);
-    let breakpoint = className.replace(/.*@\+?|!/g, '');
+    const isMax = selector.includes(MEDIA_MAX_WIDTH);
+    let breakpoint = selector.replace(/.*@\+?|!/g, '');
     const breakpointFromConfig = config.breakpoints[breakpoint];
     breakpoint = breakpointFromConfig || breakpoint;
     const num = Number(breakpoint.replace(/\D/g, '') ?? '0');

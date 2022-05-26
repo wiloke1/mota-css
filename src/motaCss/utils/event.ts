@@ -64,4 +64,5 @@ export const event = new EventEmitter<{
   success: Observers<(css: string) => void>;
   valid: Observers<(diagnostic: Diagnostic) => void>;
   invalid: Observers<(diagnostic: Diagnostic) => void>;
+  plugin: Observers<() => void>;
 }>();

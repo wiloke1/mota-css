@@ -97,6 +97,15 @@ export interface IMotaCss {
    * Off event success and failure
    */
   off(id: Id): void;
+  /**
+   * Add plugins
+   * ```ts
+   * import { atomic } from 'mota-css';
+   *
+   * atomic.addPlugins([rtl(), pfs()]);
+   * ```
+   */
+  plugins(plugins: Plugin[]): void;
 }
 export interface Config {
   /**
@@ -170,10 +179,6 @@ export interface Config {
    */
   defaultCss: string;
   /**
-   * Use rtl
-   */
-  useRtl: boolean;
-  /**
    * Exclude class names
    */
   exclude: string[];
@@ -183,12 +188,24 @@ export interface Config {
   defaultClassNames: string[];
 }
 
-export type Style = Record<string, string>;
+export type Style = [string, string];
+export interface SelectorStyle {
+  [selector: string]: Style;
+}
 export interface Styles {
-  [breakpoint: string]: Style;
+  [breakpoint: string]: SelectorStyle;
 }
 export type BreakPoints = Record<string, string>;
 export type Custom = Record<string, string | number>;
+export interface PluginOptions {
+  config: Config;
+  cssProps: CssProps;
+  pseudo: Pseudo;
+  styles: Styles;
+  addStyles(styles: Styles): void;
+  addBase(css: string): void;
+}
+export type Plugin = (styles: PluginOptions) => void;
 export interface Diagnostic {
   message: string;
   className: string;
