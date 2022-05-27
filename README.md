@@ -177,7 +177,6 @@ atomic.setConfig({
   cache: true,
   parentSelector: '',
   exclude: [],
-  useRtl: true,
   custom: {
     'color-primary': 'var(--color-primary)',
     'color-secondary': 'var(--color-secondary)'
