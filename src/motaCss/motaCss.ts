@@ -235,6 +235,10 @@ export class MotaCss implements IMotaCss {
       ...pseudo,
     };
   }
+
+  public create() {
+    return new MotaCss();
+  }
 }
 
 export const atomic = new MotaCss();

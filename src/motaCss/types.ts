@@ -106,6 +106,15 @@ export interface IMotaCss {
    * ```
    */
   plugins(plugins: Plugin[]): void;
+  /**
+   * Create a new instance
+   * ```ts
+   * import { atomic } from 'mota-css';
+   *
+   * const instance = atomic.create();
+   * ```
+   */
+  create(): IMotaCss;
 }
 export interface Config {
   /**
