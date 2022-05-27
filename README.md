@@ -67,7 +67,7 @@ function pixelToRem(rootFontSize) {
             const [property, value] = css;
             if (/[\d.]*px/g.test(value)) {
               const newValue = value.replace(/[\d.]*px/g, (val) => {
-                const num = val.replace("px", "");
+                const num = Number(val.replace("px", ""));
                 return `${(num * 62.5) / rootFontSize / 10}rem`;
               });
               return {
