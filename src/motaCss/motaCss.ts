@@ -58,7 +58,7 @@ export class MotaCss implements IMotaCss {
 
   private handlePluginAddBase(css: string) {
     if (!this.config.defaultCss.includes(css)) {
-      this.config.defaultCss = `${this.config.defaultCss}${css}`;
+      this.config.defaultCss = `${this.config.defaultCss}\n${css}`;
     }
   }
 
