@@ -41,6 +41,10 @@ export interface IMotaCss {
    */
   customValue(callback: CustomValue): void;
   /**
+   * Get the class names
+   */
+  getClassNames(): string[];
+  /**
    * Set the class names
    * @example
    * ```ts

@@ -218,6 +218,10 @@ export class MotaCss implements IMotaCss {
     return allCss;
   }
 
+  public getClassNames() {
+    return this.classNames;
+  }
+
   public customValue(callback: CustomValue) {
     this._customValue = callback;
   }
