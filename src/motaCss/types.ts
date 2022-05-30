@@ -226,7 +226,6 @@ export type Plugin = (styles: PluginOptions) => void;
 export interface Diagnostic {
   message: string;
   className: string;
-  css: string;
 }
 export interface Event {
   success: (css: string) => void;

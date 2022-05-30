@@ -23,6 +23,7 @@
 .fz\:15px { font-size: 15px }
 .fz\:14px { font-size: 14px }
 .fz\:pfs\(20px\,30px\) { font-size: clamp(20px, 1.25vw + 15px, 30px) }
+.group\*:hover .fz\:30px\*group-hover { font-size: 30px }
 .l\:20px { left: 20px }
 [dir=\"rtl\"] .l\:20px { right: 20px }
 .lh\:1\.5 { line-height: 1.5 }
@@ -41,6 +42,7 @@
 .trf\:translate\(calc\(10px_-_20px\)\,10px\)\! { transform: translate(calc(10px - 20px),10px) !important }
 [dir=\"rtl\"] .trf\:translate\(calc\(10px_-_20px\)\,10px\)\! { transform: translate(calc(-1 * (10px - 20px)),10px) !important }
 .trs\:0\.3s { transition: 0.3s }
+.group\*:hover .trs\:0\.3s\*group-hover { transition: 0.3s }
 @media (min-width:768px) { 
 .p\:20px\@sm { padding: 20px } }
 @media (min-width:992px) { 

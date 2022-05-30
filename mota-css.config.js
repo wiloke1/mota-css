@@ -1,4 +1,4 @@
-const { pfs, rtl, getStyle } = require('./dist/index');
+const { pfs, rtl, groupHover, getStyle } = require('./dist/index');
 
 function testplugin() {
   return ({ styles, addStyles }) => {
@@ -41,7 +41,7 @@ module.exports = {
     md: '992px',
     lg: '1200px',
   },
-  plugins: [rtl(), pfs(), testplugin(), test2()],
+  plugins: [rtl(), pfs(), groupHover(), testplugin(), test2()],
   custom: {
     'color-primary': 'var(--color-primary)',
     'color-secondary': 'var(--color-secondary)',

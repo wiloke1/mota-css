@@ -42,19 +42,19 @@ instance.on('success', css => {
 
 instance.on('valid', diagnostic => {
   if (started) {
-    const { message, className, css } = diagnostic;
+    const { message, className } = diagnostic;
     log([
       [`[${message}]`, 32],
-      [`(class: "${className}" -> css: "${css}")`, 35],
+      [`(class: ${className})`, 35],
     ]);
   }
 });
 
 instance.on('invalid', diagnostic => {
-  const { message, className, css } = diagnostic;
+  const { message, className } = diagnostic;
   log([
     [`[${message}]`, 31],
-    [`(class: "${className}" -> css: "${css}")`, 35],
+    [`(class: ${className})`, 35],
   ]);
 });
 

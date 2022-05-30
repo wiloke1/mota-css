@@ -116,7 +116,6 @@ export class MotaCss implements IMotaCss {
       event.emit('invalid', {
         message: diagnostics[0].message,
         className,
-        css,
       });
       this.classNames = this.classNames.filter(name => name !== className);
       return true;
@@ -124,7 +123,6 @@ export class MotaCss implements IMotaCss {
     event.emit('valid', {
       message: COMPILED_SUCCESS,
       className,
-      css,
     });
     this.valid.add(css);
     return false;
