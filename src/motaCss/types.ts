@@ -45,6 +45,10 @@ export interface IMotaCss {
    */
   getClassNames(): string[];
   /**
+   * Reset the class names, styles and cache
+   */
+  reset(): IMotaCss;
+  /**
    * Set the class names
    * @example
    * ```ts

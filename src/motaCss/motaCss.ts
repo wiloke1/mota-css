@@ -222,6 +222,14 @@ export class MotaCss implements IMotaCss {
     return this.classNames;
   }
 
+  public reset() {
+    this.classNames = [];
+    this.styles = {};
+    this.cache = [];
+    this.valid = new Set();
+    return this;
+  }
+
   public customValue(callback: CustomValue) {
     this._customValue = callback;
   }
