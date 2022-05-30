@@ -25,12 +25,14 @@ program
 const options = program.opts();
 const PORT = options.port || 4321;
 
-atomic.setConfig(config);
+const instance = atomic.create();
+
+instance.setConfig(config);
 if (customValue) {
-  atomic.customValue(customValue);
+  instance.customValue(customValue);
 }
 
-atomic.on('success', css => {
+instance.on('success', css => {
   fs.writeFileSync(path.resolve(process.cwd(), configOutput), css);
   const timeoutId = setTimeout(() => {
     started = true;
@@ -38,7 +40,7 @@ atomic.on('success', css => {
   }, 1000);
 });
 
-atomic.on('valid', diagnostic => {
+instance.on('valid', diagnostic => {
   if (started) {
     const { message, className, css } = diagnostic;
     log([
@@ -48,7 +50,7 @@ atomic.on('valid', diagnostic => {
   }
 });
 
-atomic.on('invalid', diagnostic => {
+instance.on('invalid', diagnostic => {
   const { message, className, css } = diagnostic;
   log([
     [`[${message}]`, 31],
@@ -56,14 +58,14 @@ atomic.on('invalid', diagnostic => {
   ]);
 });
 
-atomic.plugins(plugins);
+instance.plugins(plugins);
 
 function atomicFind(file) {
   fs.readFile(path.resolve(process.cwd(), file), 'utf8', (err, data) => {
     if (err) {
       throw err;
     }
-    atomic.find(data);
+    instance.find(data);
   });
 }
 
