@@ -1,5 +1,14 @@
 
-.testttttttttt { color: red }
+[class*="number-of-lines"] {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+.number-of-lines-2 { -webkit-line-clamp: 2 }
+.number-of-lines-4 { -webkit-line-clamp: 4 }
+.number-of-lines-3 { -webkit-line-clamp: 3 }
+.number-of-lines-5 { -webkit-line-clamp: 5 }
 .bdl\:2px_solid\! { border-left: 2px solid !important }
 [dir=\"rtl\"] .bdl\:2px_solid\! { border-right: 2px solid !important }
 .bdrs\:20px { border-radius: 20px }

@@ -1,6 +1,5 @@
 import { COMPILED_SUCCESS, DOT, MAX_CACHE_SIZE, MEDIA_DEFAULT, MEDIA_MAX_WIDTH } from './constants';
 import { Config, CssProps, CustomValue, Event, IMotaCss, Plugin, Pseudo, Styles } from './types';
-import { selectorTransformer } from './utils/selectorTransformer';
 import { cssValidator } from './utils/cssValidator';
 import { props, pseudo } from './utils/data';
 import { event, Id } from './utils/event';
@@ -12,6 +11,7 @@ import { getStyle, handleValueHasContent } from './utils/getStyle';
 import { getValue } from './utils/getValue';
 import { removeDuplicate } from './utils/removeDuplicate';
 import { removeNextLineWithIgnore } from './utils/removeNextLineWithIgnore';
+import { selectorTransformer } from './utils/selectorTransformer';
 import { styleToCssString } from './utils/styleToCssString';
 
 export class MotaCss implements IMotaCss {
@@ -24,6 +24,8 @@ export class MotaCss implements IMotaCss {
   private cssProps: CssProps;
   private pseudo: Pseudo;
   private valid: Set<string>;
+  private value: string;
+  private prevInput: string;
 
   constructor() {
     this.defaultConfig = {
@@ -47,6 +49,8 @@ export class MotaCss implements IMotaCss {
     this.cssProps = props;
     this.pseudo = pseudo;
     this.valid = new Set();
+    this.value = '';
+    this.prevInput = '';
   }
 
   private handlePluginAddStyles(styles: Styles) {
@@ -62,6 +66,10 @@ export class MotaCss implements IMotaCss {
     }
   }
 
+  private handlePluginAddComponent(css: string) {
+    this.handlePluginAddBase(css);
+  }
+
   public plugins(plugins: Plugin[]): void {
     event.on('plugin', () => {
       if (plugins.length) {
@@ -71,8 +79,11 @@ export class MotaCss implements IMotaCss {
             cssProps: this.cssProps,
             pseudo: this.pseudo,
             styles: this.styles,
+            input: this.value,
+            prevInput: this.prevInput,
             addStyles: this.handlePluginAddStyles.bind(this),
             addBase: this.handlePluginAddBase.bind(this),
+            addComponent: this.handlePluginAddComponent.bind(this),
           });
         });
       }
@@ -87,8 +98,8 @@ export class MotaCss implements IMotaCss {
     event.off(id);
   }
 
-  private _setClassNames(value: string) {
-    const newValue = removeNextLineWithIgnore(value);
+  private _setClassNames() {
+    const newValue = removeNextLineWithIgnore(this.value);
     const newClassNames = getClassNames(newValue, this.config, this.cssProps);
     this.classNames = removeDuplicate([...this.classNames, ...newClassNames]);
   }
@@ -160,8 +171,8 @@ export class MotaCss implements IMotaCss {
     event.emit('plugin', undefined);
   }
 
-  private _setCache(value: string) {
-    this.cache.push(value);
+  private _setCache() {
+    this.cache.push(this.value);
     const len = this.cache.length;
     if (len > MAX_CACHE_SIZE) {
       this.cache = this.cache.slice(len - MAX_CACHE_SIZE, len);
@@ -169,16 +180,18 @@ export class MotaCss implements IMotaCss {
   }
 
   public find(value: string) {
+    this.value = value;
     if (this.config.cache) {
       if (!this.cache.includes(value)) {
-        this._setClassNames(value);
+        this._setClassNames();
         this._setStyles();
-        this._setCache(value);
+        this._setCache();
       }
     } else {
-      this._setClassNames(value);
+      this._setClassNames();
       this._setStyles();
     }
+    this.prevInput = value;
     event.emit('success', this.getCss());
     return this;
   }

@@ -219,8 +219,11 @@ export interface PluginOptions {
   cssProps: CssProps;
   pseudo: Pseudo;
   styles: Styles;
+  input: string;
+  prevInput: string;
   addStyles(styles: Styles): void;
   addBase(css: string): void;
+  addComponent(css: string): void;
 }
 export type Plugin = (styles: PluginOptions) => void;
 export interface Diagnostic {
