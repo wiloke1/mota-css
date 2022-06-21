@@ -14,6 +14,10 @@ const rtlTranslateCalc = (value: string) => {
   return value;
 };
 
+const resetValue = () => {
+  return 'initial !important';
+};
+
 export const rtl = (): Plugin => {
   return ({ styles, addStyles }) => {
     addStyles(
@@ -33,12 +37,13 @@ export const rtl = (): Plugin => {
                 [property]: value,
               }),
             )[0];
-            const start = selector.includes('[dir="rtl"] ') ? '' : '[dir="rtl"] ';
+            const start = selector.includes('[dir=rtl] ') ? '' : '[dir=rtl] ';
             if (newProp !== property) {
               return {
                 ...obj,
                 [selector]: css,
                 [`${start}${selector}`]: [newProp, value],
+                [`${start} ${selector}`]: [property, resetValue()],
               };
             }
             if (newValue !== value) {

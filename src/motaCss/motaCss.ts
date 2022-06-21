@@ -205,10 +205,8 @@ export class MotaCss implements IMotaCss {
   }
 
   public setClassNames(classNames: string[]) {
-    this.classNames = {
-      ...this.classNames,
-      ...classNames,
-    };
+    this.classNames = [...this.classNames, ...classNames];
+    this._setStyles();
     event.emit('success', this.getCss());
     return this;
   }

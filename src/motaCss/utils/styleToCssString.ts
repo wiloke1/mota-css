@@ -8,7 +8,7 @@ export const styleToCssString = (styles: SelectorStyle) => {
       return css;
     }
     const strStyle = getStyle(...style);
-    const selector_ = selectorTransformer(selector);
+    const selector_ = selectorTransformer(selector).replace(/\s+/g, ' ');
     return `${css}\n${selector_} ${strStyle}`;
   }, '');
 };
