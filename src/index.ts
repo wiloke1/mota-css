@@ -4,4 +4,5 @@ export { rtl } from './motaCss/plugins/rtl';
 export { pixelToRem } from './motaCss/plugins/pixelToRem';
 export { groupHover } from './motaCss/plugins/groupHover';
 export { cssLinearInterpolation } from './motaCss/utils/cssLinearInterpolation';
+export { selectorTransformer } from './motaCss/utils/selectorTransformer';
 export * from './motaCss/types';

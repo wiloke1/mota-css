@@ -1,4 +1,8 @@
 
+[dir=rtl] .bdl\:2px_solid\! { border-left: initial }
+[dir=rtl] .l\:20px { left: initial }
+[dir=rtl] .mr\:10px { margin-right: initial }
+[dir=rtl] .ml\:10px { margin-left: initial }
 [class*="number-of-lines"] {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -6,11 +10,8 @@
   -webkit-box-orient: vertical;
 }
 .number-of-lines-2 { -webkit-line-clamp: 2 }
-.bd\:20px_solid_red { border: 20px solid red }
-.bd\:20px_solid_blue { border: 20px solid blue }
 .bdl\:2px_solid\! { border-left: 2px solid !important }
 [dir=rtl] .bdl\:2px_solid\! { border-right: 2px solid !important }
-[dir=rtl] .bdl\:2px_solid\! { border-left: initial !important }
 .bdrs\:20px { border-radius: 20px }
 .bdrs\:10px { border-radius: 10px }
 .bgc\:rgba\(0\,0\,0\,0\.04\) { background-color: rgba(0,0,0,0.04) }
@@ -35,12 +36,15 @@
 .group\*:hover .fz\:30px\*group-hover { font-size: 30px }
 .l\:20px { left: 20px }
 [dir=rtl] .l\:20px { right: 20px }
-[dir=rtl] .l\:20px { left: initial !important }
 .lh\:1\.5 { line-height: 1.5 }
 .m\:0 { margin: 0 }
 .mt\:15px { margin-top: 15px }
 .mt\:10px { margin-top: 10px }
 .mt\:20px { margin-top: 20px }
+.mr\:10px { margin-right: 10px }
+[dir=rtl] .mr\:10px { margin-left: 10px }
+.ml\:10px { margin-left: 10px }
+[dir=rtl] .ml\:10px { margin-right: 10px }
 .o\:0 { outline: 0 }
 .op\:0\.8 { opacity: 0.8 }
 .p\:15px { padding: 15px }

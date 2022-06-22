@@ -1,4 +1,5 @@
 import rtlCssJs from 'rtl-css-js';
+import { selectorTransformer } from '../utils/selectorTransformer';
 import { Plugin } from '../types';
 
 const rtlTranslateCalc = (value: string) => {
@@ -15,11 +16,11 @@ const rtlTranslateCalc = (value: string) => {
 };
 
 const resetValue = () => {
-  return 'initial !important';
+  return 'initial';
 };
 
 export const rtl = (): Plugin => {
-  return ({ styles, addStyles }) => {
+  return ({ styles, addStyles, addBase }) => {
     addStyles(
       Object.entries(styles).reduce((obj, [breakpoint, style]) => {
         return {
@@ -39,11 +40,11 @@ export const rtl = (): Plugin => {
             )[0];
             const start = selector.includes('[dir=rtl] ') ? '' : '[dir=rtl] ';
             if (newProp !== property) {
+              addBase(`${selectorTransformer(`${start}${selector}`)} { ${property}: ${resetValue()} }`);
               return {
                 ...obj,
                 [selector]: css,
                 [`${start}${selector}`]: [newProp, value],
-                [`${start} ${selector}`]: [property, resetValue()],
               };
             }
             if (newValue !== value) {
