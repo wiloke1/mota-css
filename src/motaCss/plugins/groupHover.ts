@@ -2,7 +2,7 @@ import { Plugin } from 'motaCss/types';
 
 export const groupHover = (): Plugin => {
   const className = 'group-hover';
-  return ({ styles, addStyles }) => {
+  return ({ styles, config, addStyles }) => {
     addStyles(
       Object.entries(styles).reduce((obj, [breakpoint, style]) => {
         return {
@@ -11,7 +11,9 @@ export const groupHover = (): Plugin => {
             const [property, value] = css;
             const regexp = new RegExp(`\\*${className}`, 'g');
             if (regexp.test(selector)) {
-              const newSelector = `.group\\*:hover ${selector.replace(regexp, `\\*${className}`)}`;
+              const newSelector = `${config.parentSelector} .group\\*:hover ${selector
+                .replace(regexp, `\\*${className}`)
+                .replace(config.parentSelector, '')}`;
               const newValue = value.replace(regexp, '');
               return {
                 ...obj,
