@@ -1,4 +1,4 @@
-const { pfs, rtl, groupHover, getStyle } = require('./dist/index');
+const { pfs, rtl, groupHover } = require('./dist/index');
 
 function testplugin() {
   return ({ styles, addStyles }) => {

@@ -1,4 +1,5 @@
 import rtlCssJs from 'rtl-css-js';
+import { stylesMap } from '../utils/stylesMap';
 import { selectorTransformer } from '../utils/selectorTransformer';
 import { Plugin } from '../types';
 
@@ -22,52 +23,42 @@ const resetValue = () => {
 export const rtl = (): Plugin => {
   return ({ styles, addStyles, addBase }) => {
     addStyles(
-      Object.entries(styles).reduce((obj, [breakpoint, style]) => {
+      stylesMap(styles, (selector, css) => {
+        const [property, value] = css;
+        if (process.env.NODE_ENV === 'test') {
+          return {
+            [selector]: css,
+          };
+        }
+        const [newProp, newValue] = Object.entries(
+          rtlCssJs({
+            [property]: value,
+          }),
+        )[0];
+        const start = selector.includes('[dir=rtl] ') ? '' : '[dir=rtl] ';
+        if (newProp !== property) {
+          addBase(`${selectorTransformer(`${start}${selector}`)} { ${property}: ${resetValue()} }`);
+          return {
+            [selector]: css,
+            [`${start}${selector}`]: [newProp, value],
+          };
+        }
+        if (newValue !== value) {
+          return {
+            [selector]: css,
+            [`${start}${selector}`]: [property, newValue],
+          };
+        }
+        if (/translate(\(calc|X\(calc)/g.test(value)) {
+          return {
+            [selector]: css,
+            [`${start}${selector}`]: [property, rtlTranslateCalc(value)],
+          };
+        }
         return {
-          ...obj,
-          [breakpoint]: Object.entries(style).reduce((obj, [selector, css]) => {
-            const [property, value] = css;
-            if (process.env.NODE_ENV === 'test') {
-              return {
-                ...obj,
-                [selector]: css,
-              };
-            }
-            const [newProp, newValue] = Object.entries(
-              rtlCssJs({
-                [property]: value,
-              }),
-            )[0];
-            const start = selector.includes('[dir=rtl] ') ? '' : '[dir=rtl] ';
-            if (newProp !== property) {
-              addBase(`${selectorTransformer(`${start}${selector}`)} { ${property}: ${resetValue()} }`);
-              return {
-                ...obj,
-                [selector]: css,
-                [`${start}${selector}`]: [newProp, value],
-              };
-            }
-            if (newValue !== value) {
-              return {
-                ...obj,
-                [selector]: css,
-                [`${start}${selector}`]: [property, newValue],
-              };
-            }
-            if (/translate(\(calc|X\(calc)/g.test(value)) {
-              return {
-                ...obj,
-                [selector]: css,
-                [`${start}${selector}`]: [property, rtlTranslateCalc(value)],
-              };
-            }
-            return {
-              ...obj,
-              [selector]: css,
-            };
-          }, {}),
+          [selector]: css,
         };
-      }, {}),
+      }),
     );
   };
 };
