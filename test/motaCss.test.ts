@@ -66,6 +66,14 @@ const shortTests = [
     output: '@media (max-width:991px) { .p\\:10px\\@\\+md { padding: 10px } }'
   },
   {
+    input: 'Nth-child -> <div class="c:red|nch(1)"></div>',
+    output: '.c\\:red\\|nch\\(1\\):nth-child(1) { color: red }'
+  },
+  {
+    input: 'Nth-child 2 -> <div class="c:red|nch(2n_+_1)"></div>',
+    output: '.c\\:red\\|nch\\(2n_\\+_1\\):nth-child(2n + 1) { color: red }'
+  },
+  {
     input: 'Javascript -> itemEl.classList.remove("trf:scale(1)");',
     output: '.trf\\:scale\\(1\\) { transform: scale(1) }'
   }

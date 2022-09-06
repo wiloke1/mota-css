@@ -771,4 +771,8 @@ export const pseudo = {
   mrt: '-moz-range-track',
   wpiv: '-webkit-progress-inner-value',
   se: 'spelling-error',
+  nch: 'nth-child',
+  nlch: 'nth-last-child',
+  nlot: 'nth-last-of-type',
+  ntot: 'nth-of-type',
 };

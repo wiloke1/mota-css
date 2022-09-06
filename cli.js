@@ -5,7 +5,7 @@ const chokidar = require('chokidar');
 const { program } = require('commander');
 const glob = require('glob');
 const { atomic } = require('./dist/index');
-const { input: configInput, output: configOutput, customValue, plugins, ...config } = require(path.resolve(process.cwd(), 'mota-css.config.js'));
+const { input: configInput, output: configOutput, customValue, plugins = [], ...config } = require(path.resolve(process.cwd(), 'mota-css.config.js'));
 
 const server = http.createServer();
 const input = configInput || './src';
@@ -41,7 +41,7 @@ instance.on('success', css => {
 });
 
 instance.on('valid', diagnostic => {
-  if (started) {
+  if (started && options.watch) {
     const { message, className } = diagnostic;
     log([
       [`[${message}]`, 32],
