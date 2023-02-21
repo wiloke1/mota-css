@@ -1,6 +1,5 @@
 import { COMPILED_SUCCESS, DOT, MAX_CACHE_SIZE, MEDIA_DEFAULT, MEDIA_MAX_WIDTH } from './constants';
 import { Config, CssProps, CustomValue, Event, IMotaCss, Plugin, Pseudo, Styles } from './types';
-import { cssValidator } from './utils/cssValidator';
 import { props, pseudo } from './utils/data';
 import { event, Id } from './utils/event';
 import { getBreakpoint } from './utils/getBreakpoint';
@@ -122,8 +121,8 @@ export class MotaCss implements IMotaCss {
       return false;
     }
 
-    const diagnostics = cssValidator(css);
-    if (diagnostics.length) {
+    const diagnostics = this.config.validator?.(css);
+    if (diagnostics?.length) {
       event.emit('invalid', {
         message: diagnostics[0].message,
         className,

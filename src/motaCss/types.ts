@@ -203,6 +203,10 @@ export interface Config {
    * Default class names
    */
   defaultClassNames: string[];
+  /**
+   * Validate css
+   */
+  validator?: (css: string) => Diagnostic[];
 }
 
 export type Style = [string, string];

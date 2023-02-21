@@ -1,4 +1,4 @@
-import { Plugin } from 'motaCss/types';
+import { Plugin } from '../types';
 import { stylesMap } from '../utils/stylesMap';
 
 export const groupHover = (): Plugin => {

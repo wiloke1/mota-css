@@ -17,7 +17,7 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "build": "tsdx build && rm dist/*.map && rm dist/*.esm.js",
+    "build": "tsdx build --format cjs,esm,umd && tsc src/validator.ts --outDir dist && rm dist/*.map && rm dist/*.esm.js",
     "test": "tsdx test",
     "lint": "tsdx lint",
     "prepare": "tsdx build && rm dist/*.map && rm dist/*.esm.js",
