@@ -20,7 +20,7 @@
     "build": "tsdx build --format cjs,esm,umd && tsc src/validator.ts --outDir dist && rm dist/*.map && rm dist/*.esm.js",
     "test": "tsdx test",
     "lint": "tsdx lint",
-    "prepare": "tsdx build && rm dist/*.map && rm dist/*.esm.js",
+    "prepare": "tsdx build --format cjs,esm,umd && tsc src/validator.ts --outDir dist && rm dist/*.map && rm dist/*.esm.js",
     "size": "size-limit",
     "analyze": "size-limit --why",
     "test:cli": "node cli -w"
