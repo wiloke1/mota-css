@@ -206,7 +206,7 @@ export interface Config {
   /**
    * Validate css
    */
-  validator?: (css: string) => Diagnostic[];
+  validator?: (css: string) => any;
 }
 
 export type Style = [string, string];
