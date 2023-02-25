@@ -28,6 +28,7 @@ yarn add mota-css
 
 ```js
 const { pfs, rtl, stylesMap } = require('mota-css');
+const { validator } = require('mota-css/dist/validator');
 
 module.exports = {
   input: ["./src/**/*.jsx", "./src/**/*.js"],
@@ -37,6 +38,7 @@ module.exports = {
       font-size: 14px;
     }
   `,
+  validator,
   cache: true,
   plugins: [pixelToRem(62.5), rtl(), pfs(), testplugin2()],
   customValue(value) {
@@ -160,6 +162,7 @@ m:calc(20px_+_10px)   -> .m\:calc\(20px_+_10px\) { margin: calc(20px + 10px) }
 
 ```js
 import { atomic } from 'mota-css';
+import { validator } from 'mota-css/dist/validator';
 
 atomic.setConfig({
   breakpoints: {
@@ -174,6 +177,7 @@ atomic.setConfig({
     'color-primary': 'var(--color-primary)',
     'color-secondary': 'var(--color-secondary)'
   },
+  validator,
 });
 
 atomic.plugins([rtl(), pfs()]);
