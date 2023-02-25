@@ -17,10 +17,10 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "build": "tsdx build --format cjs,esm,umd && tsc src/validator.ts --outDir dist && rm dist/*.map && rm dist/*.esm.js",
+    "build": "tsdx build --format cjs,esm,umd && tsc src/validator.ts --outDir dist",
     "test": "tsdx test",
     "lint": "tsdx lint",
-    "prepare": "tsdx build --format cjs,esm,umd && tsc src/validator.ts --outDir dist && rm dist/*.map && rm dist/*.esm.js",
+    "prepare": "tsdx build --format cjs,esm,umd && tsc src/validator.ts --outDir dist",
     "size": "size-limit",
     "analyze": "size-limit --why",
     "test:cli": "node cli -w"

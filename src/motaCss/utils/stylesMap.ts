@@ -1,4 +1,4 @@
-import { Style, Styles } from 'motaCss/types';
+import { Style, Styles } from '../types';
 
 export type Callback = (selector: string, css: Style) => Record<string, Style>;
 
