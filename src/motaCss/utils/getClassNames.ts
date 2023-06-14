@@ -15,9 +15,12 @@ export const getClassNames = (value: string, config: Config, cssProps: CssProps)
     const regexp = new RegExp(`("|'|\`|\\s)${key}:(\\w|\\/|\\||\\.|\\+|\\*|\\(|\\)|\\!|%|@|#|,|;|-)*`, 'g');
     return [
       ...arr,
-      ...(value.match(regexp) || []).reduce<string[]>((arr, item) => {
+      ...((value.match(regexp) || []) as string[]).reduce<string[]>((arr, item) => {
         // Condition item has `(` but not `)`
         if (cond(item)) {
+          return arr;
+        }
+        if (item.includes('t:sections')) {
           return arr;
         }
         const newItem = removeRedundantChar(item);
