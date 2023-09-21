@@ -1,5 +1,5 @@
 import { COMPILED_SUCCESS, DOT, MAX_CACHE_SIZE, MEDIA_DEFAULT, MEDIA_MAX_WIDTH } from './constants';
-import { Config, CssProps, CustomValue, Event, IMotaCss, Plugin, Pseudo, Styles } from './types';
+import { ClientConfig, CssProps, CustomValue, Event, IMotaCss, Plugin, Pseudo, Styles } from './types';
 import { props, pseudo } from './utils/data';
 import { event, Id } from './utils/event';
 import { getBreakpoint } from './utils/getBreakpoint';
@@ -16,8 +16,8 @@ import { styleToCssString } from './utils/styleToCssString';
 export class MotaCss implements IMotaCss {
   private classNames: string[];
   private styles: Styles;
-  private defaultConfig: Config;
-  private config: Config;
+  private defaultConfig: ClientConfig;
+  private config: ClientConfig;
   private cache: string[];
   private _customValue: CustomValue;
   private cssProps: CssProps;
@@ -195,7 +195,7 @@ export class MotaCss implements IMotaCss {
     return this;
   }
 
-  public setConfig(cfg: Partial<Config> = {}) {
+  public setConfig(cfg: Partial<ClientConfig> = {}) {
     this.config = {
       ...this.defaultConfig,
       ...cfg,

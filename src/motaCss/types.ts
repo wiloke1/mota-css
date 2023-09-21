@@ -16,7 +16,7 @@ export interface IMotaCss {
   /**
    * Set the config
    */
-  setConfig(config: Config): void;
+  setConfig(config: ClientConfig): void;
   /**
    * Get the css
    * @example
@@ -124,7 +124,7 @@ export interface IMotaCss {
    */
   create(): IMotaCss;
 }
-export interface Config {
+export interface ClientConfig {
   /**
    * Breakpoints for media queries
    * @example
@@ -219,7 +219,7 @@ export interface Styles {
 export type BreakPoints = Record<string, string>;
 export type Custom = Record<string, string | number>;
 export interface PluginOptions {
-  config: Config;
+  config: ClientConfig;
   cssProps: CssProps;
   pseudo: Pseudo;
   styles: Styles;
@@ -245,3 +245,10 @@ export type Unsubscribe = () => void;
 export type CustomValue = (value: string) => string;
 export type CssProps = Record<string, string>;
 export type Pseudo = Record<string, string>;
+
+export interface Config extends ClientConfig {
+  input: string;
+  output: string;
+  customValue: CustomValue;
+  plugins: Plugin[];
+}
