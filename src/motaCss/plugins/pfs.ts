@@ -11,12 +11,17 @@ export const pfs = (minDevice = 400, maxDevice = 1200): Plugin => {
       stylesMap(styles, (selector, css) => {
         const [property, value] = css;
         if (/pfs\(.*\)/g.test(value)) {
-          const values = value.match(MIN_MAX_PATTERN)?.map(Number) ?? MIN_MAX_DEFAULT_VALUE;
-          const [min, max] = [Math.min(...values), Math.max(...values)];
-          const newValue = `clamp(${min}px, ${cssLinearInterpolation({
+          const [min, max] = value.match(MIN_MAX_PATTERN)?.map(Number) ?? MIN_MAX_DEFAULT_VALUE;
+          let newValue = `clamp(${min}px, ${cssLinearInterpolation({
             [minDevice]: min,
             [maxDevice]: max,
           })}, ${max}px)`;
+          if (min < 0 && max < 0) {
+            newValue = `calc(clamp(${min * -1}px, ${cssLinearInterpolation({
+              [minDevice]: min * -1,
+              [maxDevice]: max * -1,
+            })}, ${max * -1}px) * -1)`;
+          }
           return {
             [selector]: [property, newValue],
           };
